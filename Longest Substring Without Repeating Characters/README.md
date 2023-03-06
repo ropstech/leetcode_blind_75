@@ -62,3 +62,27 @@ print(Solution.length_of_longest_substring(s))
 This code should output 3, which is the length of the longest substring without repeating characters in the given string.
 
 
+### Sliding Window
+The Sliding Window technique is a popular algorithmic approach that is often used to solve optimization problems. The general idea behind the Sliding Window technique is to create a window of some fixed size and slide it over the input data in order to solve the problem at hand.
+
+In this solution, we maintain a sliding window of characters in the input string s such that the characters within the window are all unique. We initialize the window with the first character of the string and move the window to the right by one character at a time. If the character at the right end of the window is not already in the window, we add it to the window and update the maximum length of the window. If the character is already in the window, we remove the leftmost character from the window and move the window to the right.
+
+This algorithm runs in O(n) time because we visit each character in the string at most twice (once when adding it to the set and once when removing it from the set). Therefore, it is much more efficient than the brute force algorithm we discussed earlier.
+
+```python
+class Solution:
+    def length_of_longest_substring(s: str) -> int:
+        n = len(s)
+        chars = set()
+        i, j = 0, 0
+        max_length = 0
+        while i < n and j < n:
+            if s[j] not in chars:
+                chars.add(s[j])
+                j += 1
+                max_length = max(max_length, j-i)
+            else:
+                chars.remove(s[i])
+                i += 1
+        return max_length
+````
