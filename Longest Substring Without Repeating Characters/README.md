@@ -63,17 +63,12 @@ This code should output 3, which is the length of the longest substring without 
 
 
 ### Sliding Window
-The Sliding Window technique is a popular algorithmic approach that is often used to solve optimization problems. The general idea behind the Sliding Window technique is to create a window of some fixed size and slide it over the input data in order to solve the problem at hand.
-
-In this solution, we maintain a sliding window of characters in the input string s such that the characters within the window are all unique. We initialize the window with the first character of the string and move the window to the right by one character at a time. If the character at the right end of the window is not already in the window, we add it to the window and update the maximum length of the window. If the character is already in the window, we remove the leftmost character from the window and move the window to the right.
-
-This algorithm runs in O(n) time because we visit each character in the string at most twice (once when adding it to the set and once when removing it from the set). Therefore, it is much more efficient than the brute force algorithm we discussed earlier.
 
 ```python
 class Solution:
     def length_of_longest_substring(s: str) -> int:
         n = len(s)
-        chars = set()
+        chars = set() # set to keep track of characters in current window
         i, j = 0, 0
         max_length = 0
         while i < n and j < n:
@@ -82,7 +77,56 @@ class Solution:
                 j += 1
                 max_length = max(max_length, j-i)
             else:
-                chars.remove(s[i])
+                chars.remove(s[i]) # remove the leftmost character from set
                 i += 1
         return max_length
-````
+```
+
+The Sliding Window technique is a popular algorithmic approach that is often used to solve optimization problems. The general idea behind the Sliding Window technique is to create a window of some fixed size and slide it over the input data in order to solve the problem at hand.
+
+In this solution, we maintain a sliding window of characters in the input string s such that the characters within the window are all unique. We initialize the window with the first character of the string and move the window to the right by one character at a time. If the character at the right end of the window is not already in the window, we add it to the window and update the maximum length of the window. If the character is already in the window, we remove the leftmost character from the window and move the window to the right.
+
+This algorithm runs in O(n) time because we visit each character in the string at most twice (once when adding it to the set and once when removing it from the set). Therefore, it is much more efficient than the brute force algorithm we discussed earlier.
+
+
+To test this code, you can use the same code as in the Brute Force Test:
+```python
+s = "abcabcbb"
+print(Solution.length_of_longest_substring(s)) 
+```
+
+### Optimized Sliding Window
+```python
+class Solution:
+    def length_of_longest_substring(s: str) -> int:
+        n = len(s)
+        char_dict = {}
+        i, j = 0, 0
+        max_length = 0
+        while j < n:
+            if s[j] in char_dict and i <= char_dict[s[j]]:
+                i = char_dict[s[j]] + 1
+            else:
+                max_length = max(max_length, j - i + 1)
+            char_dict[s[j]] = j
+            j += 1
+        return max_length
+```
+
+In this approach, instead of using a set to keep track of the unique characters in the current substring, we use a dictionary to keep track of the last seen index of each character.
+
+The i pointer still represents the start of the current substring and the j pointer represents the end. We iterate through the string, moving j forward and updating the dictionary to store the last seen index of each character.
+
+If we encounter a character that is already in the dictionary and its last seen index is greater than or equal to the current i, we update i to be one greater than the last seen index of the character, effectively "sliding" the window to exclude the previously seen occurrence of the character.
+
+Otherwise, we update max_length to be the maximum of its current value and the length of the current substring (which is j - i + 1), and add the current character and its index to the dictionary.
+
+I will go a little more into detail on what the following if statement is doing:
+```python
+if s[j] in char_dict and i <= char_dict[s[j]]:
+```
+In the if statement, we are checking if the current character s[j] is already in the dictionary chars and if its position is within the current window. We need to check if the position of the current character is within the current window because if it's outside the window, we don't need to consider it when we update the window.
+
+The condition i <= chars[s[j]] checks if the position of the current character is greater than or equal to the start index of the current window (i). If it's less than i, it means the current character's position is outside the current window and we don't need to consider it. If it's greater than i, it means the current character's position is within the current window and we need to update the start index of the window to be one position to the right of the current position of the character in the dictionary. This is because we want to exclude the previous occurrence of the character from the current window, as we want to find the longest substring without repeating characters.
+
+Overall, this approach has a time complexity of O(n), which is an improvement over the O(n^2) time complexity of the brute force approach and the O(n log n) time complexity of the normal sliding window approach.
