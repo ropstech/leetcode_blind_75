@@ -6,4 +6,5 @@ Find the original challenges on [leetcode.com](https://leetcode.com/list/xi4ci4i
 
 #### Find the code challenges inside each folder.
 
-- [Two_Sum](https://github.com/ropstech/leetcode_blind_75/tree/main/two-sum)
+- [Two Sum](https://github.com/ropstech/leetcode_blind_75/tree/main/two-sum)
+- [Longest Substring Without Repeating Characters](https://github.com/ropstech/leetcode_blind_75/tree/main/Longest%20Substring%20Without%20Repeating%20Characters)
